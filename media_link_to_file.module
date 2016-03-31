@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Main code of module.
+ */
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function media_link_to_file_field_widget_form_alter(&$element, &$form_state, $context) {
+  $widget = $context['instance']['widget'];
+  if ($widget['type'] == 'media_generic') {
+    foreach (element_children($element) as $key) {
+      $element[$key]['#process'][] = 'media_link_to_file_media_generic_widget_process';
+    }
+  }
+}
+
+/**
+ * Custom process callback for form element. Adds link to file.
+ */
+function media_link_to_file_media_generic_widget_process($element, &$form_state, $form) {
+  if (isset($element['#file']->fid)) {
+    $file = file_load($element['#file']->fid);
+    $element['download_link'] = array(
+      '#markup' => format_string(
+        '<a href="@url" class="button" target="_blank">@label</a>',
+        array(
+          '@url' => file_create_url($file->uri),
+          '@label' => t('Link to file'),
+        )
+      )
+    );
+  }
+  return $element;
+}

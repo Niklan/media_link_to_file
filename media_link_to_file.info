@@ -1,0 +1,7 @@
+name = Media - Link to file
+description = Adds direct link to original file.
+package = Media
+core = 7.x
+version = 7.x-1.x
+
+dependencies[] = media
